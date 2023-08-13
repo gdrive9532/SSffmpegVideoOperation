@@ -1,40 +1,46 @@
-name: Android Build
-
+name: GitHub Actions Demo
 on:
   push:
+    paths:
+      - '**.yml'
     branches:
       - main
-  workflow_dispatch:
-
+  pull_request:
+    branches:
+      - main
 jobs:
-  build:
+  Explore-GitHub-Actions:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
         uses: actions/checkout@v2
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - uses: actions/checkout@v1
 
-      - name: Set up Java
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Set Up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: 17
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-
-      - name: Make Gradlew Executable
+      - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
       - name: Run Tests
         run: ./gradlew test
 
-      - name: Build App
+      - name: Build Project
         run: ./gradlew assemble
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: app/build/outputs/apk/debug/*.apk
-          
+        
