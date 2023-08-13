@@ -19,6 +19,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
           node-version: '16'
 
       - name: Make Gradlew Executable
@@ -35,4 +39,3 @@ jobs:
         with:
           name: app
           path: app/build/outputs/apk/debug/*.apk
-          
