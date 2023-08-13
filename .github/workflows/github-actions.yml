@@ -1,48 +1,53 @@
-name: GitHub Actions Demo
+name: Demo Workflow
+
 on:
   push:
-    paths:
-      - '**.yml'
     branches:
       - main
   pull_request:
     branches:
       - main
+
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
+      - name: Print event information
+        run: echo "Event name: ${{ github.event_name }}"
+      
+      - name: Print runner information
+        run: echo "Running on: ${{ runner.os }}"
+      
+      - name: Print repository information
+        run: |
+          echo "Branch name: ${{ github.ref }}"
+          echo "Repository: ${{ github.repository }}"
+      
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref }}
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      
+      - name: Print clone message
+        run: echo "Repository code cloned"
+      
+      - name: Prepare environment
         run: |
           ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-
-      - name: Set Up Node.js
+          chmod +x ./gradlew
+      
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16
-
-      - name: Set Up JDK
+          node-version: '16'
+      
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: 17
-          distribution: 'adopt'
-
-      - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-
-      - name: Run Tests
+          java-version: '17'
+      
+      - name: Run tests
         run: ./gradlew test
-
-      - name: Build Project
+      
+      - name: Build project
         run: ./gradlew assemble
         
